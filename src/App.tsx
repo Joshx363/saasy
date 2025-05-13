@@ -12,6 +12,8 @@ const ModuleAssignments = React.lazy(() => import('./pages/dashboard/company/Mod
 const TeamManagement = React.lazy(() => import('./pages/dashboard/company/TeamManagement'));
 const DownloadLogs = React.lazy(() => import('./pages/dashboard/company/DownloadLogs'));
 const Billing = React.lazy(() => import('./pages/dashboard/company/Billing'));
+const ManageSubscription = React.lazy(() => import('./pages/dashboard/company/ManageSubscription'));
+const UpgradePlan = React.lazy(() => import('./pages/dashboard/company/UpgradePlan'));
 const Reports = React.lazy(() => import('./pages/dashboard/company/Reports'));
 const Security = React.lazy(() => import('./pages/dashboard/company/Security'));
 
@@ -83,6 +85,22 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
                   <Billing />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="billing/manage" 
+              element={
+                <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
+                  <ManageSubscription />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="billing/upgrade" 
+              element={
+                <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
+                  <UpgradePlan />
                 </Suspense>
               } 
             />
