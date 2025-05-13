@@ -47,7 +47,7 @@ const Navbar: React.FC = () => {
             </button>
             {featuresOpen && (
               <div className="absolute z-10 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
-                <Link to="/modules" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                <Link to="/features#smodules" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   Module Library
                 </Link>
                 <Link to="/features#analytics" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -62,9 +62,19 @@ const Navbar: React.FC = () => {
               </div>
             )}
           </div>
-          <Link to="/pricing" className="text-gray-600 hover:text-gray-900">
+          <a 
+            href="/#pricing" 
+            className="text-gray-600 hover:text-gray-900 cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              const pricingSection = document.getElementById('pricing');
+              if (pricingSection) {
+                pricingSection.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          >
             Pricing
-          </Link>
+          </a>
           {!auth.isAuthenticated ? (
             <>
               <Link to="/login">
@@ -125,9 +135,20 @@ const Navbar: React.FC = () => {
                 </div>
               )}
             </div>
-            <Link to="/pricing" className="text-gray-600 hover:text-gray-900 py-2">
+            <a 
+              href="/#pricing" 
+              className="text-gray-600 hover:text-gray-900 py-2 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                  pricingSection.scrollIntoView({ behavior: 'smooth' });
+                  setIsMenuOpen(false);
+                }
+              }}
+            >
               Pricing
-            </Link>
+            </a>
             {!auth.isAuthenticated ? (
               <>
                 <Link to="/login" className="py-2">
