@@ -14,10 +14,7 @@ const DownloadLogs = React.lazy(() => import('./pages/dashboard/company/Download
 const Billing = React.lazy(() => import('./pages/dashboard/company/Billing'));
 const ManageSubscription = React.lazy(() => import('./pages/dashboard/company/ManageSubscription'));
 const UpgradePlan = React.lazy(() => import('./pages/dashboard/company/UpgradePlan'));
-<<<<<<< HEAD
 const UpdatePaymentMethod = React.lazy(() => import('./pages/dashboard/company/UpdatePaymentMethod'));
-=======
->>>>>>> de34be0debf5e974a1c9ee65007065aa93bc85bd
 const Reports = React.lazy(() => import('./pages/dashboard/company/Reports'));
 const Security = React.lazy(() => import('./pages/dashboard/company/Security'));
 
@@ -109,7 +106,6 @@ const App: React.FC = () => {
               } 
             />
             <Route 
-<<<<<<< HEAD
               path="billing/payment" 
               element={
                 <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
@@ -118,8 +114,6 @@ const App: React.FC = () => {
               } 
             />
             <Route 
-=======
->>>>>>> de34be0debf5e974a1c9ee65007065aa93bc85bd
               path="reports" 
               element={
                 <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
