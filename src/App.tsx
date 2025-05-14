@@ -8,6 +8,7 @@ import DashboardLayout from './components/layout/DashboardLayout';
 
 // Company Dashboard Pages
 const ModuleLibrary = React.lazy(() => import('./pages/dashboard/company/ModuleLibrary'));
+const ModuleDetails = React.lazy(() => import('./pages/dashboard/company/ModuleDetails'));
 const ModuleAssignments = React.lazy(() => import('./pages/dashboard/company/ModuleAssignments'));
 const TeamManagement = React.lazy(() => import('./pages/dashboard/company/TeamManagement'));
 const DownloadLogs = React.lazy(() => import('./pages/dashboard/company/DownloadLogs'));
@@ -54,6 +55,14 @@ const App: React.FC = () => {
               element={
                 <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
                   <ModuleLibrary />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="modules/:moduleId" 
+              element={
+                <Suspense fallback={<div className="flex items-center justify-center h-full p-4">Loading...</div>}>
+                  <ModuleDetails />
                 </Suspense>
               } 
             />
