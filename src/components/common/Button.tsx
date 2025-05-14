@@ -36,9 +36,9 @@ const Button: React.FC<ButtonProps> = ({
   };
   
   const sizeStyles: Record<ButtonSize, string> = {
-    sm: 'text-sm h-8 px-3',
-    md: 'text-base h-10 px-4',
-    lg: 'text-lg h-12 px-6',
+    sm: 'text-xs h-7 px-2',
+    md: 'text-sm h-8 px-3',
+    lg: 'text-base h-10 px-4',
   };
   
   const widthStyle = fullWidth ? 'w-full' : '';

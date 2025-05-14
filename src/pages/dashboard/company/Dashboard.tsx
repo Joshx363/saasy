@@ -23,10 +23,11 @@ const CompanyDashboard: React.FC = () => {
     return <div>Loading company data...</div>;
   }
 
-  // Calculate remaining time in subscription (dummy calculation)
-  const endDate = new Date();
-  endDate.setMonth(endDate.getMonth() + 6); // Assuming 6 months subscription remaining
-  const timeRemaining = Math.floor((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+  // Calculate remaining time in subscription
+  const subscriptionEndDate = new Date('2023-11-15'); // Matching the date format in ManageSubscription
+  const timeRemaining = Math.floor((subscriptionEndDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+  // Ensure we don't show negative days if the date is in the past
+  const daysRemaining = timeRemaining > 0 ? timeRemaining : 184; // Default to 184 days (about 6 months)
   
   // Get company-specific data
   const companyModules = moduleAssignments.filter(ma => ma.userId.startsWith('3') || ma.userId.startsWith('4')); 
@@ -58,16 +59,8 @@ const CompanyDashboard: React.FC = () => {
             <h2 className="text-lg font-semibold text-gray-900">Subscription Status</h2>
             <p className="text-gray-600">
               <span className="font-medium">{company.plan.charAt(0).toUpperCase() + company.plan.slice(1)} Plan</span> - 
-              {timeRemaining} days remaining
+              {daysRemaining} days remaining
             </p>
-          </div>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <Button variant="outline" size="sm">
-              Manage Subscription
-            </Button>
-            <Button size="sm">
-              Upgrade Plan
-            </Button>
           </div>
         </div>
       </Card>

@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { CreditCard, DollarSign, Calendar, Package, ChevronRight } from 'lucide-react';
 import Card from '../../../components/common/Card';
 import Button from '../../../components/common/Button';
 
 // Mock data for billing
 const mockBillingData = {
-  currentPlan: 'Professional',
+  currentPlan: 'Pro',
   billingCycle: 'Monthly',
-  nextBillingDate: '2023-07-15',
+  nextBillingDate: '2023-06-15',
   amount: 49.99,
   paymentMethod: {
     type: 'Credit Card',
@@ -17,27 +18,27 @@ const mockBillingData = {
   recentInvoices: [
     {
       id: 'INV-001',
-      date: '2023-06-15',
-      amount: 49.99,
-      status: 'paid',
-    },
-    {
-      id: 'INV-002',
       date: '2023-05-15',
       amount: 49.99,
       status: 'paid',
     },
     {
-      id: 'INV-003',
+      id: 'INV-002',
       date: '2023-04-15',
+      amount: 49.99,
+      status: 'paid',
+    },
+    {
+      id: 'INV-003',
+      date: '2023-03-15',
       amount: 49.99,
       status: 'paid',
     },
   ],
   usage: {
-    modules: 12,
+    modules: 3,
     maxModules: 15,
-    users: 8,
+    users: 3,
     maxUsers: 10,
     storage: 45,
     maxStorage: 50,
@@ -46,64 +47,75 @@ const mockBillingData = {
 
 const Billing: React.FC = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Billing & Subscription</h1>
-        <Button>
-          <CreditCard className="mr-2 h-4 w-4" />
-          Update Payment Method
-        </Button>
+        <h1 className="text-xl font-bold text-gray-900">Billing & Subscription</h1>
+        <div className="flex space-x-3">
+          <Link to="/billing/manage">
+            <Button variant="outline">
+              Manage Subscription
+            </Button>
+          </Link>
+          <Link to="/billing/payment">
+            <Button>
+              <CreditCard className="mr-2 h-4 w-4" />
+              Update Payment Method
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Current Plan */}
       <Card>
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Current Plan: {mockBillingData.currentPlan}</h2>
+            <h2 className="text-base font-semibold text-gray-900">Current Plan: {mockBillingData.currentPlan}</h2>
             <p className="text-sm text-gray-600 mt-1">
               Billing {mockBillingData.billingCycle.toLowerCase()} · Next payment on {mockBillingData.nextBillingDate}
             </p>
           </div>
-          <Button variant="outline">
-            Change Plan
-          </Button>
+          <Link to="/billing/upgrade">
+            <Button variant="outline">
+              Change Plan
+            </Button>
+          </Link>
         </div>
       </Card>
 
       {/* Billing Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         <Card>
           <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-lg">
+            <div className="p-2 bg-blue-100 rounded-lg">
               <DollarSign className="h-6 w-6 text-blue-900" />
             </div>
             <div className="ml-4">
               <h3 className="text-sm font-medium text-gray-500">Monthly Cost</h3>
-              <p className="text-2xl font-semibold text-gray-900">${mockBillingData.amount}</p>
+              <p className="text-xl font-semibold text-gray-900">${mockBillingData.amount}</p>
             </div>
           </div>
         </Card>
 
         <Card>
           <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-lg">
+            <div className="p-2 bg-green-100 rounded-lg">
               <Calendar className="h-6 w-6 text-green-700" />
             </div>
             <div className="ml-4">
               <h3 className="text-sm font-medium text-gray-500">Next Payment</h3>
-              <p className="text-2xl font-semibold text-gray-900">{mockBillingData.nextBillingDate}</p>
+              <p className="text-xl font-semibold text-gray-900">{mockBillingData.nextBillingDate}</p>
             </div>
           </div>
         </Card>
 
         <Card>
           <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-lg">
+            <div className="p-2 bg-purple-100 rounded-lg">
               <Package className="h-6 w-6 text-purple-700" />
             </div>
             <div className="ml-4">
               <h3 className="text-sm font-medium text-gray-500">Active Modules</h3>
-              <p className="text-2xl font-semibold text-gray-900">
+              <p className="text-xl font-semibold text-gray-900">
                 {mockBillingData.usage.modules}/{mockBillingData.usage.maxModules}
               </p>
             </div>
@@ -112,7 +124,7 @@ const Billing: React.FC = () => {
 
         <Card>
           <div className="flex items-center">
-            <div className="p-3 bg-amber-100 rounded-lg">
+            <div className="p-2 bg-amber-100 rounded-lg">
               <CreditCard className="h-6 w-6 text-amber-700" />
             </div>
             <div className="ml-4">
@@ -130,7 +142,7 @@ const Billing: React.FC = () => {
 
       {/* Usage Overview */}
       <Card title="Usage Overview">
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
             <div className="flex justify-between items-center mb-1">
               <span className="text-sm text-gray-600">Modules Used</span>

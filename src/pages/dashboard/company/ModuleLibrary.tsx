@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, Download, ChevronRight } from 'lucide-react';
+import { Search, Filter, Download, ChevronRight, X } from 'lucide-react';
 import Card from '../../../components/common/Card';
 import Button from '../../../components/common/Button';
 import { useAuth } from '../../../context/AuthContext';
@@ -30,11 +30,19 @@ const ModuleLibrary: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [filteredModules, setFilteredModules] = useState(modules);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [advancedFilters, setAdvancedFilters] = useState({
+    minDownloads: 0,
+    maxSize: 100,
+    requiredRole: 'all',
+    status: 'all',
+    minVersion: ''
+  });
   
   // Get unique categories
   const categories = ['all', ...new Set(modules.map(module => module.category))];
   
-  // Filter modules based on search term and category
+  // Filter modules based on search term, category, and advanced filters
   useEffect(() => {
     let result = modules;
     
@@ -49,8 +57,42 @@ const ModuleLibrary: React.FC = () => {
       result = result.filter(module => module.category === selectedCategory);
     }
     
+    // Apply advanced filters
+    if (advancedFilters.minDownloads > 0) {
+      result = result.filter(module => module.downloadCount >= advancedFilters.minDownloads);
+    }
+    
+    if (advancedFilters.maxSize < 100) {
+      result = result.filter(module => parseFloat(module.size) <= advancedFilters.maxSize);
+    }
+    
+    if (advancedFilters.requiredRole !== 'all') {
+      result = result.filter(module => module.requiredRole === advancedFilters.requiredRole);
+    }
+    
+    if (advancedFilters.status !== 'all') {
+      result = result.filter(module => module.status === advancedFilters.status);
+    }
+    
+    if (advancedFilters.minVersion) {
+      result = result.filter(module => {
+        const moduleVersion = module.version.split('.').map(Number);
+        const minVersion = advancedFilters.minVersion.split('.').map(Number);
+        
+        for (let i = 0; i < Math.max(moduleVersion.length, minVersion.length); i++) {
+          const modVer = moduleVersion[i] || 0;
+          const minVer = minVersion[i] || 0;
+          
+          if (modVer > minVer) return true;
+          if (modVer < minVer) return false;
+        }
+        
+        return true; // Versions are equal
+      });
+    }
+    
     setFilteredModules(result);
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, advancedFilters]);
 
   // Format date for display
   const formatDate = (date: Date) => {
@@ -102,12 +144,141 @@ const ModuleLibrary: React.FC = () => {
               </select>
             </div>
             
-            <Button size="sm">
+            <Button 
+              size="sm" 
+              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+            >
               Advanced Filters
             </Button>
           </div>
         </div>
       </Card>
+      
+      {/* Advanced Filters Panel */}
+      {showAdvancedFilters && (
+        <Card className="p-4">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-medium">Advanced Filters</h3>
+            <button 
+              onClick={() => setShowAdvancedFilters(false)} 
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Min Downloads
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+                value={advancedFilters.minDownloads}
+                onChange={(e) => setAdvancedFilters({
+                  ...advancedFilters,
+                  minDownloads: parseInt(e.target.value) || 0
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Max Size (MB)
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+                value={advancedFilters.maxSize}
+                onChange={(e) => setAdvancedFilters({
+                  ...advancedFilters,
+                  maxSize: parseInt(e.target.value) || 0
+                })}
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Required Role
+              </label>
+              <select
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+                value={advancedFilters.requiredRole}
+                onChange={(e) => setAdvancedFilters({
+                  ...advancedFilters,
+                  requiredRole: e.target.value
+                })}
+              >
+                <option value="all">All Roles</option>
+                <option value="company_admin">Company Admin</option>
+                <option value="developer">Developer</option>
+                <option value="viewer">Viewer</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Status
+              </label>
+              <select
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+                value={advancedFilters.status}
+                onChange={(e) => setAdvancedFilters({
+                  ...advancedFilters,
+                  status: e.target.value
+                })}
+              >
+                <option value="all">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="deprecated">Deprecated</option>
+                <option value="beta">Beta</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Min Version
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 1.0.0"
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900 sm:text-sm"
+                value={advancedFilters.minVersion}
+                onChange={(e) => setAdvancedFilters({
+                  ...advancedFilters,
+                  minVersion: e.target.value
+                })}
+              />
+            </div>
+          </div>
+          
+          <div className="mt-4 flex justify-end space-x-3">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setAdvancedFilters({
+                minDownloads: 0,
+                maxSize: 100,
+                requiredRole: 'all',
+                status: 'all',
+                minVersion: ''
+              })}
+            >
+              Reset Filters
+            </Button>
+            <Button 
+              size="sm"
+              onClick={() => setShowAdvancedFilters(false)}
+            >
+              Apply Filters
+            </Button>
+          </div>
+        </Card>
+      )}
       
       {/* Module Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
